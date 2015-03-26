@@ -84,4 +84,4 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATIC_URL = '/opt/myenv/project/static/'
+STATIC_ROOT = '/opt/myenv/project/static/'
