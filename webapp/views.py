@@ -5,5 +5,9 @@ from webapp import models
 def index(request):
 
 	p1 = models.Purchase.objects.all()
-	return render_to_response('list.html', {'title':'kormushka','purchase': p1})
-
+	p2 = models.Organization.objects.all()
+	org = None
+	r = list(p2[:1])
+	if r:
+	  org = r[0]
+	return render_to_response('list.html', {'title':'kormushka','purchase': p1,'organization':org})
