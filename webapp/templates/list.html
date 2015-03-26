@@ -2,6 +2,25 @@
 
 {% block contentRegion %}
 <div class="row">
-	Список пользователей
+	<h3>Список покупок</h3>
+	<br />
+	<table class="table table-condensed table-hover">
+	<tr class="active">
+		<th>Покупка</th>
+		<th>Пользователь</th>
+		<th>Цена</th>
+	</tr>
+	{% for x in purchase%}
+	<tr>
+		<td>{{x.name}}</td>
+		<td>{{x.user}}</td>
+		<td>{{x.cost}}0 руб.</td>
+	</tr>
+	
+	{% endfor %}
+	</table>
 </div>
 {% endblock %}
+
+{% block title %}{{title}}{% endblock %}
+

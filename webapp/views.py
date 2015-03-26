@@ -3,5 +3,7 @@ from django.shortcuts import render_to_response
 from webapp import models
 
 def index(request):
-	return render_to_response('list.html', {'title':'kormushka'})
+
+	p1 = models.Purchase.objects.all()
+	return render_to_response('list.html', {'title':'kormushka','purchase': p1})
 
