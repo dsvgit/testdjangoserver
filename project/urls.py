@@ -1,8 +1,8 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
-from webapp import views
 
 urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
-    (r'^$', views.index),
+    url(r'^', include('webapp.urls')),
+    url(r'^', include('loginsys.urls')),
 )

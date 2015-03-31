@@ -1,13 +1,12 @@
 from django.shortcuts import render
-from django.shortcuts import render_to_response
-from webapp import models
+#from webapp.models import Purchase
+from django.contrib import auth
+from django.core.context_processors import csrf
 
 def index(request):
 
-	p1 = models.Purchase.objects.all()
-	p2 = models.Organization.objects.all()
-	org = None
-	r = list(p2[:1])
-	if r:
-	  org = r[0]
-	return render_to_response('list.html', {'title':'kormushka','purchase': p1,'organization':org})
+#	purchase = Purchase.objects.all() #получение всех покупок
+	return render(request,'list.html', {
+		'title':'kormushka',
+		'user':auth.get_user(request),
+	})

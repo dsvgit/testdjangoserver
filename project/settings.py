@@ -9,9 +9,10 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 """
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-import os
+import os 
+import ldap3
+from django_auth_ldap.config import LDAPSearch, LDAPSearchUnion
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
@@ -37,13 +38,15 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'webapp',
-)
+    'loginsys',
+    )
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django_remote_auth_ldap.middleware.RemoteUserMiddleware', #for ldap
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -85,3 +88,28 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATIC_ROOT = '/opt/myenv/project/static/'
+
+#изменяем класс, работающий с авторизацией
+AUTHENTICATION_BACKENDS = (
+    'django_auth_ldap.backend.LDAPBackend',
+#    'loginsys.auth_backends.CustomUserModelBackend',
+#    'django.contrib.auth.backends.ModelBackend',
+)
+
+AUTH_LDAP_USER_SEARCH = LDAPSearchUnion(
+    LDAPSearch("ou=admin,dc=test,dc=com", ldap3.SCOPE_SUBTREE, "(uid=%(user)s)"),
+    LDAPSearch("ou=superadmin,dc=test,dc=com", ldap3.SCOPE_SUBTREE, "(uid=%(user)s)"),
+)
+
+#изменяем класс для работы с пользователями
+#CUSTOM_USER_MODEL = 'loginsys.CustomUser'
+#UTH_LDAP_SERVER_URI = "ldap://ldap.example.com"
+# Обязательный 
+#AUTH_LDAP_SERVER =  '188.166.9.61/phpldapadmin/'                        # Имя хоста 
+#AUTH_LDAP_BASE_USER =  "CN = admin, DC = test, DC = com"    # административного пользователя Имя пользователя 
+##AUTH_LDAP_BASE_PASS =  "admin"                      # административного пользователя Пароль 
+#AUTH_LDAP_BASE_DN =  "DC = test, DC = com"               # Base DN (также принимает O = example.com формат) 
+#AUTH_LDAP_FIELD_DOMAIN =  "example.com"                # домена, с которого пользователи будут принимать домен для манекена поколения электронной почты (он держит Django счастливы!) 
+#AUTH_LDAP_GROUP_NAME =  "superadmin"                  # Django группу для пользователей LDAP (помогает нам управлять ими для смены пароля и т.д.) 
+#AUTH_LDAP_VERSION =  3                                 # LDAP версии 
+#AUTH_LDAP_OLDPW =  False                               # сервер может взять старую пароль? Верно / Неверно 
